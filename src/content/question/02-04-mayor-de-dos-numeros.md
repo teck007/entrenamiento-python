@@ -1,5 +1,5 @@
 ---
-id: 12
+id: 14
 level: 2
 type: write
 title: "Mayor de dos números"

@@ -5,5 +5,5 @@ subtitle: Estructuras
 description: "Crea funciones reutilizables y trabaja con listas y sus métodos."
 icon: package
 color: amber
-xpRequired: 270
+xpRequired: 350
 ---

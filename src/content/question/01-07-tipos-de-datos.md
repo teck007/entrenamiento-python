@@ -1,5 +1,5 @@
 ---
-id: 6
+id: 7
 level: 1
 type: fill
 title: "Tipos de datos"

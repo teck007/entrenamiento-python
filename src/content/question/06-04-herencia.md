@@ -1,5 +1,5 @@
 ---
-id: 45
+id: 59
 level: 6
 type: write
 title: Herencia

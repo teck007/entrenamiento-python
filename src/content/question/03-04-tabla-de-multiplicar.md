@@ -1,5 +1,5 @@
 ---
-id: 20
+id: 24
 level: 3
 type: write
 title: "Tabla de multiplicar"
