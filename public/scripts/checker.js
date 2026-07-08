@@ -92,6 +92,33 @@ const Checker = (() => {
         }
     }
 
+    async function checkPredict(question, userPrediction) {
+        const codeToRun = question.code;
+        const result = await runCode(codeToRun);
+        if (!result.success) {
+            return {
+                passed: false,
+                output: result.output,
+                error: result.error,
+                details: 'El código tiene un error.'
+            };
+        }
+        const actual = result.output.trim();
+        const expected = String(question.tests[0].expectedOutput).trim();
+        const userAnswer = (userPrediction || '').trim();
+        const passed = userAnswer === expected;
+        return {
+            passed,
+            output: actual,
+            userAnswer,
+            expected,
+            error: null,
+            details: passed
+                ? '¡Correcto! Adivinaste la salida exacta.'
+                : `La salida real fue "${actual}".`
+        };
+    }
+
     async function checkFill(question, userCode) {
         const codeToRun = userCode || question.code;
         const result = await runCode(codeToRun);
@@ -129,7 +156,7 @@ const Checker = (() => {
         return { passed: true, output: `Todos los tests pasaron (${count}/${count})`, error: null, details: `¡Correcto! Pasaste los ${count} tests.` };
     }
 
-    return { init, readyPromise, runCode, checkFill, checkWrite };
+    return { init, readyPromise, runCode, checkFill, checkWrite, checkPredict };
 })();
 
 globalThis.Checker = Checker;

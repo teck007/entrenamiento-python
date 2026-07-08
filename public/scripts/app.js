@@ -16,6 +16,28 @@ const App = (() => {
     let monacoLoaded = false;
     let currentView = 'dashboard'; // track without side effects
 
+    // ── Easter egg: clics en XP ───────────────────────────────
+    let _xpClickCount = 0;
+    let _xpClickTimer = null;
+
+    function handleXpEasterEgg() {
+        _xpClickCount++;
+        if (_xpClickTimer) clearTimeout(_xpClickTimer);
+        if (_xpClickCount >= 10) {
+            _xpClickCount = 0;
+            state.unlockedLevels = LEVELS.length;
+            if (state.currentLevel > state.unlockedLevels) {
+                state.currentLevel = state.unlockedLevels;
+            }
+            StateModule.saveState();
+            Toast.show('🔓 ¡Todos los niveles desbloqueados!', 'info', 4000);
+            renderSidebar();
+            renderHeader();
+            return;
+        }
+        _xpClickTimer = setTimeout(() => { _xpClickCount = 0; }, 2000);
+    }
+
     // ── Init ──────────────────────────────────────────────────
     function init() {
         try { StateModule.loadState(); } catch (e) { console.warn('loadState:', e); }
@@ -41,6 +63,7 @@ const App = (() => {
             selectQuestion, prevQuestion, nextQuestion,
             handleCheck, showHint, resetCode, resetProgress,
             continueToNextLevel, closeModal, toggleHint,
+            handleXpEasterEgg,
         };
     }
 
@@ -190,27 +213,27 @@ const App = (() => {
     }
 
     function getLevelColorCode(color) {
-        const map = { blue: '#3b82f6', emerald: '#10b981', violet: '#8b5cf6', amber: '#f59e0b', rose: '#f43f5e' };
+        const map = { blue: '#3b82f6', emerald: '#10b981', violet: '#8b5cf6', amber: '#f59e0b', rose: '#f43f5e', cyan: '#06b6d4' };
         return map[color] || '#3b82f6';
     }
 
     function getLevelColorClass(color) {
-        const map = { blue: 'level-blue', emerald: 'level-emerald', violet: 'level-violet', amber: 'level-amber', rose: 'level-rose' };
+        const map = { blue: 'level-blue', emerald: 'level-emerald', violet: 'level-violet', amber: 'level-amber', rose: 'level-rose', cyan: 'level-cyan' };
         return map[color] || 'level-blue';
     }
 
     function getLevelBorderClass(color) {
-        const map = { blue: 'level-border-blue', emerald: 'level-border-emerald', violet: 'level-border-violet', amber: 'level-border-amber', rose: 'level-border-rose' };
+        const map = { blue: 'level-border-blue', emerald: 'level-border-emerald', violet: 'level-border-violet', amber: 'level-border-amber', rose: 'level-border-rose', cyan: 'level-border-cyan' };
         return map[color] || 'level-border-blue';
     }
 
     function getLevelGlowClass(color) {
-        const map = { blue: 'level-glow-blue', emerald: 'level-glow-emerald', violet: 'level-glow-violet', amber: 'level-glow-amber', rose: 'level-glow-rose' };
+        const map = { blue: 'level-glow-blue', emerald: 'level-glow-emerald', violet: 'level-glow-violet', amber: 'level-glow-amber', rose: 'level-glow-rose', cyan: 'level-glow-cyan' };
         return map[color] || 'level-glow-blue';
     }
 
     // ── MONACO EDITOR ────────────────────────────────────────
-    async function loadMonaco(containerId, code) {
+    async function loadMonaco(containerId, code, readOnly = false) {
         if (monacoLoaded && monacoEditor) {
             monacoEditor.setValue(code);
             // Focus the editor
@@ -245,19 +268,22 @@ const App = (() => {
                 overviewRulerLanes: 0,
                 hideCursorInOverviewRuler: true,
                 overviewRulerBorder: false,
+                readOnly: readOnly,
+                domReadOnly: readOnly,
             });
 
             monacoLoaded = true;
 
-            // Ctrl+Enter binding
-            monacoEditor.addAction({
-                id: 'run-code',
-                label: 'Ejecutar código',
-                keybindings: [monacoLib.KeyMod.CtrlCmd | monacoLib.KeyCode.Enter],
-                run: () => handleCheck(),
-            });
-
-            monacoEditor.focus();
+            if (!readOnly) {
+                // Ctrl+Enter binding (only in editable modes)
+                monacoEditor.addAction({
+                    id: 'run-code',
+                    label: 'Ejecutar código',
+                    keybindings: [monacoLib.KeyMod.CtrlCmd | monacoLib.KeyCode.Enter],
+                    run: () => handleCheck(),
+                });
+                monacoEditor.focus();
+            }
 
             // Dynamic height
             updateMonacoHeight();
@@ -325,7 +351,12 @@ const App = (() => {
 
         let result;
         if (question.type === 'fill') result = await Checker.checkFill(question, userCode);
-        else result = await Checker.checkWrite(question, userCode);
+        else if (question.type === 'write') result = await Checker.checkWrite(question, userCode);
+        else if (question.type === 'predict') {
+            const predInput = document.getElementById('predict-input');
+            const userPrediction = predInput ? predInput.value : '';
+            result = await Checker.checkPredict(question, userPrediction);
+        }
 
         checkBtn.disabled = false;
         checkBtn.innerHTML = '<i data-lucide="play"></i> Ejecutar';
@@ -401,7 +432,14 @@ const App = (() => {
     function resetCode() {
         const question = getCurrentQuestion();
         if (!question) return;
-        setEditorCode(question.code);
+
+        if (question.type === 'predict') {
+            const predInput = document.getElementById('predict-input');
+            if (predInput) predInput.value = '';
+        } else {
+            setEditorCode(question.code);
+        }
+
         const resultArea = document.getElementById('result-area');
         if (resultArea) resultArea.innerHTML = '<div class="text-slate-500 italic text-sm">Ejecutá tu código para ver el resultado acá.</div>';
         // Close hint
@@ -459,11 +497,22 @@ const App = (() => {
         if (state.currentLevel < LEVELS.length) {
             state.currentLevel++;
             state.currentQuestionIndex = 0;
-            state.currentView = 'question';
+        state.currentView = 'question';
             StateModule.saveState();
             render();
         } else {
-            goToDashboard();
+            window.removeEventListener('resize', updateMonacoHeight);
+        }
+
+        // Focus the predict input after render
+        if (state.currentView === 'question') {
+            const question = getCurrentQuestion();
+            if (question && question.type === 'predict') {
+                setTimeout(() => {
+                    const input = document.getElementById('predict-input');
+                    if (input) input.focus();
+                }, 300);
+            }
         }
     }
 
@@ -512,7 +561,7 @@ const App = (() => {
             const question = getCurrentQuestion();
             if (!question) return;
 
-            loadMonaco('monaco-container', question.code);
+            loadMonaco('monaco-container', question.code, question.type === 'predict');
 
             // Update Monaco height on resize
             window.addEventListener('resize', updateMonacoHeight);
@@ -589,7 +638,7 @@ const App = (() => {
             footer.innerHTML = `
                 <div class="flex items-center gap-2 mb-1">
                     <i data-lucide="star" class="text-yellow-400" style="width:16px;height:16px"></i>
-                    <span class="sidebar-xp-text text-yellow-400 font-semibold text-sm">${state.xp} XP</span>
+                    <span class="sidebar-xp-text text-yellow-400 font-semibold text-sm" onclick="App.handleXpEasterEgg()" style="cursor:pointer" title="Hacé clic 10 veces rápido para desbloquear todo">${state.xp} XP</span>
                     ${nextXP ? `<span class="sidebar-xp-text text-slate-500 text-xs ml-auto">${state.xp}/${nextXP}</span>` : ''}
                 </div>
                 ${nextXP ? `
@@ -821,9 +870,20 @@ const App = (() => {
 
         const nav = getQuestionNavState();
         const answered = isQuestionAnswered(question.id);
-        const typeLabel = question.type === 'fill' ? 'Completar código' : 'Escribir código';
-        const typeColor = question.type === 'fill' ? 'text-blue-400 border-blue-700/30 bg-blue-900/20' : 'text-violet-400 border-violet-700/30 bg-violet-900/20';
-        const typeDot = question.type === 'fill' ? '<i data-lucide="text-cursor-input" style="width:14px;height:14px" class="inline-block align-middle"></i>' : '<i data-lucide="pencil" style="width:14px;height:14px" class="inline-block align-middle"></i>';
+        let typeLabel, typeColor, typeDot;
+        if (question.type === 'fill') {
+            typeLabel = 'Completar código';
+            typeColor = 'text-blue-400 border-blue-700/30 bg-blue-900/20';
+            typeDot = '<i data-lucide="text-cursor-input" style="width:14px;height:14px" class="inline-block align-middle"></i>';
+        } else if (question.type === 'write') {
+            typeLabel = 'Escribir código';
+            typeColor = 'text-violet-400 border-violet-700/30 bg-violet-900/20';
+            typeDot = '<i data-lucide="pencil" style="width:14px;height:14px" class="inline-block align-middle"></i>';
+        } else {
+            typeLabel = 'Predecir salida';
+            typeColor = 'text-cyan-400 border-cyan-700/30 bg-cyan-900/20';
+            typeDot = '<i data-lucide="scan-eye" style="width:14px;height:14px" class="inline-block align-middle"></i>';
+        }
         const hintAlreadyUsed = isHintUsed(question.id);
 
         return `
@@ -859,6 +919,20 @@ const App = (() => {
                     <textarea id="code-editor" class="code-editor w-full bg-slate-950 text-slate-100 p-4 border-0 resize-y min-h-[160px] hidden"
                         spellcheck="false" autocomplete="off">${escapeHtml(question.code)}</textarea>
                 </div>
+
+                ${question.type === 'predict' ? `
+                <!-- Predict Input -->
+                <div class="mb-3 shrink-0">
+                    <label for="predict-input" class="text-sm text-slate-300 font-medium mb-1.5 block">
+                        <i data-lucide="help-circle" style="width:16px;height:16px" class="inline-block align-text-bottom mr-1"></i>
+                        ¿Cuál es la salida del programa?
+                    </label>
+                    <input id="predict-input" type="text"
+                        class="w-full bg-slate-800/60 border border-slate-600/30 rounded-xl px-4 py-3 text-slate-100 font-mono text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500/50 transition-all"
+                        placeholder="Escribí acá la salida que esperás..."
+                        autocomplete="off" spellcheck="false">
+                </div>
+                ` : ''}
 
                 <!-- Actions Row -->
                 <div class="flex items-center gap-3 mb-3 shrink-0 flex-wrap">
@@ -925,19 +999,28 @@ const App = (() => {
                         </svg>
                         <span class="text-emerald-400 font-bold">¡Correcto!</span>
                     </div>
+                    ${result.userAnswer !== undefined ? `<div class="text-xs text-slate-500 mt-1">Tu respuesta: <span class="font-mono text-slate-300">${escapeHtml(result.userAnswer)}</span></div>` : ''}
                     ${result.output ? `<div class="bg-slate-900/50 rounded-lg p-3 font-mono text-sm text-slate-300 mt-1">${escapeHtml(result.output)}</div>` : ''}
                 </div>`;
         } else {
             let extra = '';
             if (result.error) extra += `<div class="bg-red-900/20 rounded-lg p-3 font-mono text-sm text-red-300 mt-2">${escapeHtml(result.error)}</div>`;
-            if (result.expected) extra += `<div class="text-xs text-slate-500 mt-1">Esperado: <span class="font-mono text-emerald-300">${escapeHtml(result.expected)}</span></div>`;
+            if (result.expected) {
+                extra += `<div class="text-xs text-slate-500 mt-1">Esperado: <span class="font-mono text-emerald-300">${escapeHtml(result.expected)}</span></div>`;
+                if (result.userAnswer !== undefined) {
+                    extra += `<div class="text-xs text-slate-500 mt-0.5">Tu respuesta: <span class="font-mono text-amber-300">${escapeHtml(result.userAnswer) || '(vacío)'}</span></div>`;
+                }
+                if (result.output) {
+                    extra += `<div class="text-xs text-slate-500 mt-0.5">Salida real: <span class="font-mono text-slate-300">${escapeHtml(result.output)}</span></div>`;
+                }
+            }
             resultArea.innerHTML = `
                 <div class="animate-fade-in">
                     <div class="flex items-center gap-2 mb-2">
                         <i data-lucide="x" class="text-red-400" style="width:20px;height:20px"></i>
                         <span class="text-red-400 font-semibold text-sm">${(result.details || 'Incorrecto').replace(/[❌✅]\s*/g, '')}</span>
                     </div>
-                    ${result.output ? `<div class="bg-slate-900/50 rounded-lg p-3 font-mono text-sm text-slate-400 mt-1">Output: ${escapeHtml(result.output)}</div>` : ''}
+                    ${result.output && !result.expected ? `<div class="bg-slate-900/50 rounded-lg p-3 font-mono text-sm text-slate-400 mt-1">Output: ${escapeHtml(result.output)}</div>` : ''}
                     ${extra}
                     <p class="text-slate-500 text-xs mt-2"><i data-lucide="lightbulb" style="width:12px;height:12px" class="inline-block"></i> Revisá la lógica e intentá de nuevo</p>
                 </div>`;
