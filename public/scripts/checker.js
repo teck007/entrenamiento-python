@@ -103,19 +103,16 @@ const Checker = (() => {
                 details: 'El código tiene un error.'
             };
         }
-        const actual = result.output.trim();
         const expected = String(question.tests[0].expectedOutput).trim();
         const userAnswer = (userPrediction || '').trim();
         const passed = userAnswer === expected;
         return {
             passed,
-            output: actual,
             userAnswer,
-            expected,
             error: null,
             details: passed
                 ? '¡Correcto! Adivinaste la salida exacta.'
-                : `La salida real fue "${actual}".`
+                : 'No es la salida correcta. Analizá el código paso a paso.'
         };
     }
 
