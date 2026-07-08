@@ -285,7 +285,8 @@ const App = (() => {
                 monacoEditor.focus();
             }
 
-            // Dynamic height
+            // Dynamic height — update on content changes
+            monacoEditor.onDidChangeModelContent(() => updateMonacoHeight());
             updateMonacoHeight();
         } catch (e) {
             console.warn('Monaco falló, usando textarea:', e);
@@ -304,10 +305,12 @@ const App = (() => {
         if (!container) return;
         const model = monacoEditor.getModel();
         if (!model) return;
+        const question = getCurrentQuestion();
+        const minHeight = question?.type === 'write' ? 200 : 80;
         const lineCount = model.getLineCount();
         const lineHeight = 20;
         const padding = 24;
-        const newHeight = Math.max(80, lineCount * lineHeight + padding);
+        const newHeight = Math.max(minHeight, lineCount * lineHeight + padding);
         container.style.height = newHeight + 'px';
         monacoEditor.layout();
     }
