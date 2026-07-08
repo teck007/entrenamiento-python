@@ -1,0 +1,41 @@
+---
+// ============================================================
+// BaseLayout.astro — HTML shell global
+// ============================================================
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'PyTrainer — Aprendé Python', description = 'Aprendé Python paso a paso resolviendo ejercicios interactivos' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Skulpt: Python en el navegador (CDN estable: jsDelivr) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"
+      crossorigin="anonymous"
+      onerror="window.__skulptLoadError = true"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"
+      crossorigin="anonymous"
+      onerror="window.__skulptLoadError = true"
+    ></script>
+
+    <!-- Monaco Editor CDN (lazy load) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+    <slot name="head" />
+  </head>
+  <body class="h-full bg-slate-900 text-slate-100 antialiased">
+    <slot />
+  </body>
+</html>

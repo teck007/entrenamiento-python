@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const levels = await getCollection('level');
+const questions = await getCollection('question');
+
+const xpConfig = { fillQuestion: 10, writeQuestion: 20, levelCompleteBonus: 30, perfectLevelBonus: 50 };
+
+const sortedLevels = levels
+  .filter(l => typeof l.data.id === 'number')
+  .sort((a, b) => a.data.id - b.data.id)
+  .map(l => ({
+    id: l.data.id, title: l.data.title, subtitle: l.data.subtitle,
+    description: l.data.description, icon: l.data.icon, color: l.data.color,
+    xpRequired: l.data.xpRequired,
+  }));
+
+const sortedQuestions = questions
+  .sort((a, b) => a.data.id - b.data.id)
+  .map(q => ({
+    id: q.data.id, level: q.data.level, type: q.data.type,
+    title: q.data.title, description: extractDescription(q.body),
+    code: extractCode(q.body), tests: q.data.tests,
+    hint: q.data.hint || '', xp: q.data.xp,
+  }));
+
+function extractCode(body) {
+  const match = body.match(/```python\n?([\s\S]*?)```/);
+  return match ? match[1].trim() : '';
+}
+
+function extractDescription(body) {
+  return body.replace(/```[\s\S]*$/, '').trim();
+}
+---
+
+<BaseLayout>
+  <div slot="head">
+    <style is:global>
+      html { scrollbar-gutter: stable; }
+    </style>
+  </div>
+
+  <div id="app" class="min-h-screen flex bg-slate-900">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar w-64 bg-slate-800/40 border-r border-slate-700/30 flex flex-col shrink-0 overflow-hidden">
+      <!-- Sidebar header -->
+      <div class="sidebar-header flex items-center gap-3 px-4 py-4 border-b border-slate-700/30">
+        <span class="text-2xl"><i data-lucide="code-2" style="width:28px;height:28px"></i></span>
+        <span class="sidebar-text font-bold text-slate-100 text-lg">PyTrainer</span>
+      </div>
+      <!-- Sidebar items container -->
+      <nav id="sidebar-items" class="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
+      </nav>
+      <!-- Sidebar footer -->
+      <div id="sidebar-footer" class="border-t border-slate-700/30 px-4 py-3">
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top header -->
+      <header id="app-header" class="bg-slate-800/40 border-b border-slate-700/30 px-4 lg:px-6 py-3 sticky top-0 z-30 backdrop-blur-sm">
+      </header>
+
+      <!-- Content -->
+      <main id="main-content" class="flex-1 overflow-y-auto">
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Data injection -->
+  <script define:vars={{ levels: sortedLevels, questions: sortedQuestions, xpConfig }}>
+    window.__LEVELS = levels;
+    window.__QUESTIONS = questions;
+    window.__XP_CONFIG = xpConfig;
+  </script>
+
+  <!-- Lucide: reemplaza <i data-lucide="name"> por SVGs -->
+  <script>
+    import { createIcons, icons } from 'lucide';
+    window.__lucideCreateIcons = () => createIcons({ icons });
+  </script>
+
+  <script is:inline src="/scripts/checker.js"></script>
+  <script is:inline src="/scripts/state.js"></script>
+  <script is:inline src="/scripts/app.js"></script>
+</BaseLayout>

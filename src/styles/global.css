@@ -1,0 +1,238 @@
+/* ============================================================
+   PyTrainer — Estilos globales v3
+   ============================================================ */
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+.sidebar-item:hover {
+  background: rgba(51, 65, 85, 0.5);
+}
+.sidebar-item.active {
+  background: rgba(59, 130, 246, 0.1);
+}
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+.sidebar-item.active.level-blue::before { background: #3b82f6; }
+.sidebar-item.active.level-emerald::before { background: #10b981; }
+.sidebar-item.active.level-violet::before { background: #8b5cf6; }
+.sidebar-item.active.level-amber::before { background: #f59e0b; }
+.sidebar-item.active.level-rose::before { background: #f43f5e; }
+
+/* Sidebar progress bar */
+.sidebar-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(71, 85, 105, 0.4);
+  overflow: hidden;
+}
+.sidebar-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ── Glassmorphism ───────────────────────────────────────── */
+.glass-panel {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.glass-card {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+/* ── Gradient borders per level ──────────────────────────── */
+.level-border-blue { border-color: #3b82f6 !important; }
+.level-border-emerald { border-color: #10b981 !important; }
+.level-border-violet { border-color: #8b5cf6 !important; }
+.level-border-amber { border-color: #f59e0b !important; }
+.level-border-rose { border-color: #f43f5e !important; }
+
+.level-glow-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+.level-glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+.level-glow-violet { box-shadow: 0 0 20px rgba(139, 92, 246, 0.15); }
+.level-glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
+.level-glow-rose { box-shadow: 0 0 20px rgba(244, 63, 94, 0.15); }
+
+/* ── Checkmark animado ───────────────────────────────────── */
+.checkmark {
+  width: 40px;
+  height: 40px;
+  stroke-width: 3;
+  stroke: #34d399;
+  stroke-miterlimit: 10;
+}
+.checkmark circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: checkmarkCircle 0.6s ease-in-out forwards;
+}
+.checkmark path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: checkmarkDraw 0.4s 0.3s ease-in-out forwards;
+}
+@keyframes checkmarkCircle { to { stroke-dashoffset: 0; } }
+@keyframes checkmarkDraw { to { stroke-dashoffset: 0; } }
+
+/* ── Toast container ─────────────────────────────────────── */
+#toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: all;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: toastIn 0.3s ease-out;
+}
+.toast.removing {
+  animation: toastOut 0.3s ease-in forwards;
+}
+.toast-success { border-left: 3px solid #10b981; }
+.toast-error { border-left: 3px solid #ef4444; }
+.toast-info { border-left: 3px solid #3b82f6; }
+.toast-xp { border-left: 3px solid #facc15; }
+
+/* ── XP Popup legacy ─────────────────────────────────────── */
+.xp-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  pointer-events: none;
+  animation: xpPop 1.5s ease-out forwards;
+}
+
+/* ── Modal overlay ───────────────────────────────────────── */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ── Level cards ─────────────────────────────────────────── */
+.level-card {
+  cursor: default;
+  transition: all 0.25s ease;
+}
+.level-card:not(.locked) {
+  cursor: pointer;
+}
+.level-card:not(.locked):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+.level-card.locked {
+  opacity: 0.5;
+}
+
+/* ── Monaco overrides ────────────────────────────────────── */
+.monaco-editor .margin,
+.monaco-editor .monaco-editor-background {
+  background-color: #020617 !important;
+}
+
+/* ── Hint toggle ─────────────────────────────────────────── */
+.hint-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+  max-height: 0;
+  opacity: 0;
+}
+.hint-content.open {
+  max-height: 300px;
+  opacity: 1;
+}
+
+/* ── Dashboard stat card ─────────────────────────────────── */
+.stat-card {
+  transition: all 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Progress Ring SVG ───────────────────────────────────── */
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.8s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* ── Monaco skeleton loader ──────────────────────────────── */
+.monaco-skeleton {
+  background: linear-gradient(90deg, #0f172a 25%, #1e293b 50%, #0f172a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Responsive sidebar ──────────────────────────────────── */
+@media (max-width: 767px) {
+  .sidebar-text { display: none; }
+  .sidebar-progress-wrap { display: none; }
+  .sidebar-xp-text { display: none; }
+  .sidebar { width: 56px !important; }
+  .sidebar-icon { margin: 0 auto; }
+  .sidebar-header { justify-content: center; padding: 12px 0; }
+  .sidebar-item { justify-content: center; padding: 10px 0; }
+  .dashboard-grid-cards { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 639px) {
+  .stat-cards { grid-template-columns: 1fr !important; }
+  .question-nav-dots { display: none; }
+}
