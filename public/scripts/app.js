@@ -256,7 +256,7 @@ const App = (() => {
             monacoEditor = monacoLib.editor.create(container, {
                 value: code,
                 language: 'python',
-                theme: 'hc-black',
+                theme: 'vs-dark',
                 automaticLayout: true,
                 minimap: { enabled: false },
                 fontSize: 14,
