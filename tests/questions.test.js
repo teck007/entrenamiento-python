@@ -12,6 +12,12 @@ const SAMPLE_FILL = {
     hint: 'Una pista', xp: 10,
 };
 
+const SAMPLE_PREDICT = {
+    id: 40, level: 5, type: 'predict', title: 'Predecir salida',
+    code: 'x = 10\nprint(x + 5)', tests: [{ expectedOutput: '15' }],
+    hint: 'Sumá los números mentalmente.', xp: 20,
+};
+
 const SAMPLE_WRITE = {
     id: 25, level: 4, type: 'write', title: 'Función sumar',
     code: 'def sumar(a, b): pass', tests: [{ call: 'sumar(3,4)', expectedOutput: '7' }],
@@ -29,9 +35,14 @@ describe('Estructura de preguntas (fixture tests)', () => {
         required.forEach(f => expect(SAMPLE_WRITE).toHaveProperty(f));
     });
 
-    it('type solo puede ser "fill" o "write"', () => {
-        expect(['fill', 'write']).toContain(SAMPLE_FILL.type);
-        expect(['fill', 'write']).toContain(SAMPLE_WRITE.type);
+    it('predict questions tienen todos los campos requeridos', () => {
+        const required = ['id', 'level', 'type', 'title', 'code', 'tests', 'hint', 'xp'];
+        required.forEach(f => expect(SAMPLE_PREDICT).toHaveProperty(f));
+    });
+
+    it('type solo puede ser "fill", "write" o "predict"', () => {
+        expect(['fill', 'write', 'predict']).toContain(SAMPLE_FILL.type);
+        expect(['fill', 'write', 'predict']).toContain(SAMPLE_WRITE.type);
     });
 
     it('fill questions tienen exactamente 1 test', () => {

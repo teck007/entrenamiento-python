@@ -10,7 +10,8 @@ const LEVELS = [
     { id: 2, title: 'Condicionales', subtitle: 'Control de flujo', description: 'Tomá decisiones.', icon: '🔀', color: 'emerald', xpRequired: 70 },
     { id: 3, title: 'Bucles', subtitle: 'Iteración', description: 'Dominá for, while.', icon: '🔄', color: 'violet', xpRequired: 160 },
     { id: 4, title: 'Funciones y Listas', subtitle: 'Estructuras', description: 'Creá funciones.', icon: '📦', color: 'amber', xpRequired: 270 },
-    { id: 5, title: 'POO y Avanzado', subtitle: 'Programación Orientada a Objetos', description: 'Clases y objetos.', icon: '🧬', color: 'rose', xpRequired: 400 },
+    { id: 5, title: 'Análisis de Código', subtitle: 'Lectura y comprensión', description: 'Analizá programas y descubrí qué imprimen.', icon: '👁️', color: 'cyan', xpRequired: 350 },
+    { id: 6, title: 'POO y Avanzado', subtitle: 'Programación Orientada a Objetos', description: 'Clases y objetos.', icon: '🧬', color: 'rose', xpRequired: 480 },
 ];
 
 const XP_CONFIG = {
@@ -21,8 +22,8 @@ const XP_CONFIG = {
 };
 
 describe('Estructura de niveles', () => {
-    it('tiene exactamente 5 niveles', () => {
-        expect(LEVELS).toHaveLength(5);
+    it('tiene exactamente 6 niveles', () => {
+        expect(LEVELS).toHaveLength(6);
     });
 
     it('todos los niveles tienen campos requeridos', () => {
@@ -32,7 +33,7 @@ describe('Estructura de niveles', () => {
         });
     });
 
-    it('los IDs son secuenciales del 1 al 5', () => {
+    it('los IDs son secuenciales del 1 al 6', () => {
         LEVELS.forEach((l, i) => {
             expect(l.id).toBe(i + 1);
         });
