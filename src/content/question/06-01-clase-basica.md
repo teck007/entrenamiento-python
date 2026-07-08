@@ -1,6 +1,6 @@
 ---
-id: 32
-level: 5
+id: 42
+level: 6
 type: fill
 title: "Clase básica"
 xp: 10

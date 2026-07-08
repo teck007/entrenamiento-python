@@ -1,6 +1,6 @@
 ---
-id: 36
-level: 5
+id: 46
+level: 6
 type: fill
 title: "Try-Except"
 xp: 10

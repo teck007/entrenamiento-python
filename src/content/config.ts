@@ -23,7 +23,7 @@ const questionCollection = defineCollection({
   schema: z.object({
     id: z.number(),
     level: z.number(),
-    type: z.enum(['fill', 'write']),
+    type: z.enum(['fill', 'write', 'predict']),
     title: z.string(),
     xp: z.number(),
     hint: z.string().optional(),

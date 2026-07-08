@@ -1,6 +1,6 @@
 ---
-id: 34
-level: 5
+id: 44
+level: 6
 type: fill
 title: "Atributos de instancia"
 xp: 10

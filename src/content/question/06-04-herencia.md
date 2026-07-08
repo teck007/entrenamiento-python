@@ -1,6 +1,6 @@
 ---
-id: 35
-level: 5
+id: 45
+level: 6
 type: write
 title: Herencia
 xp: 20
