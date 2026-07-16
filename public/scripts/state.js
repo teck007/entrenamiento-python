@@ -6,6 +6,7 @@ const StateModule = (() => {
     'use strict';
 
     const STORAGE_KEY = 'pytrainer_progress';
+    const THEME_KEY = 'pytrainer_theme';
 
     const defaultState = {
         currentView: 'dashboard',
@@ -16,6 +17,7 @@ const StateModule = (() => {
         answeredQuestions: [],
         hintsUsed: [],
         levelCompletedShown: [],
+        theme: 'dark', // 'dark' | 'light'
     };
 
     let state = { ...defaultState };
@@ -26,6 +28,11 @@ const StateModule = (() => {
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = { ...defaultState, ...parsed };
+            }
+            // Restore theme from dedicated key (más confiable que el estado)
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                state.theme = savedTheme;
             }
             if (state.unlockedLevels < 1) state.unlockedLevels = 1;
             if (state.currentLevel > state.unlockedLevels) {
@@ -47,7 +54,9 @@ const StateModule = (() => {
                 answeredQuestions: state.answeredQuestions,
                 hintsUsed: state.hintsUsed,
                 levelCompletedShown: state.levelCompletedShown,
+                theme: state.theme,
             }));
+            localStorage.setItem(THEME_KEY, state.theme);
         } catch (e) {
             console.warn('Error guardando progreso:', e);
         }
@@ -56,13 +65,35 @@ const StateModule = (() => {
     function resetState() {
         state = { ...defaultState };
         saveState();
+        // Reset theme too
+        document.documentElement.classList.remove('light');
+        localStorage.setItem(THEME_KEY, 'dark');
     }
 
     function getState() { return state; }
 
     function setState(partial) { Object.assign(state, partial); }
 
-    // Helpers
+    // ── Theme helpers ────────────────────────────────────────
+    function getTheme() { return state.theme; }
+
+    function setTheme(theme) {
+        state.theme = theme;
+        if (theme === 'light') {
+            document.documentElement.classList.add('light');
+        } else {
+            document.documentElement.classList.remove('light');
+        }
+        localStorage.setItem(THEME_KEY, theme);
+        // Don't save full state on every toggle — just theme key
+    }
+
+    function toggleTheme() {
+        setTheme(state.theme === 'dark' ? 'light' : 'dark');
+        return state.theme;
+    }
+
+    // ── Helpers ──────────────────────────────────────────────
     function getQuestionsForLevel(levelId) {
         return window.__QUESTIONS.filter(q => q.level === levelId);
     }
@@ -113,6 +144,9 @@ const StateModule = (() => {
         resetState,
         getState,
         setState,
+        getTheme,
+        setTheme,
+        toggleTheme,
         getQuestionsForLevel,
         getLevelQuestions,
         getCurrentQuestion,

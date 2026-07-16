@@ -63,7 +63,7 @@ const App = (() => {
             selectQuestion, prevQuestion, nextQuestion,
             handleCheck, showHint, resetCode, resetProgress,
             continueToNextLevel, closeModal, toggleHint,
-            handleXpEasterEgg,
+            handleXpEasterEgg, toggleTheme,
         };
     }
 
@@ -253,10 +253,11 @@ const App = (() => {
             // Clear skeleton
             container.innerHTML = '';
 
+            const isLight = document.documentElement.classList.contains('light');
             monacoEditor = monacoLib.editor.create(container, {
                 value: code,
                 language: 'python',
-                theme: 'vs-dark',
+                theme: isLight ? 'vs' : 'vs-dark',
                 automaticLayout: true,
                 minimap: { enabled: false },
                 fontSize: 14,
@@ -444,7 +445,7 @@ const App = (() => {
         }
 
         const resultArea = document.getElementById('result-area');
-        if (resultArea) resultArea.innerHTML = '<div class="text-slate-500 italic text-sm">Ejecutá tu código para ver el resultado acá.</div>';
+        if (resultArea) resultArea.innerHTML = '<div class="text-slate-500 italic text-sm">Ejecuta tu código para ver el resultado aquí.</div>';
         // Close hint
         const content = document.getElementById('hint-content');
         const btn = document.getElementById('hint-btn');
@@ -535,6 +536,16 @@ const App = (() => {
         }
     }
 
+    // ── THEME TOGGLE ────────────────────────────────────────
+    function toggleTheme() {
+        const newTheme = StateModule.toggleTheme();
+        if (monacoLib && monacoEditor) {
+            monacoLib.editor.setTheme(newTheme === 'dark' ? 'vs-dark' : 'vs');
+        }
+        renderHeader();
+        refreshIcons();
+    }
+
     // ── RENDER PRINCIPAL ─────────────────────────────────────
     function render() {
         const prevView = currentView;
@@ -594,7 +605,7 @@ const App = (() => {
             <div class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${isDashboard ? 'active' : ''}"
                  onclick="App.goToDashboard()" role="button">
                 <i data-lucide="home" class="shrink-0 sidebar-icon" style="width:20px;height:20px"></i>
-                <span class="sidebar-text text-sm font-medium ${isDashboard ? 'text-blue-300' : 'text-slate-300'}">Dashboard</span>
+                <span class="sidebar-text text-sm font-medium ${isDashboard ? 'text-blue-500' : 'text-slate-300'}">Dashboard</span>
             </div>
             <div class="border-t border-slate-700/20 my-2"></div>
             ${LEVELS.map(level => {
@@ -641,7 +652,7 @@ const App = (() => {
             footer.innerHTML = `
                 <div class="flex items-center gap-2 mb-1">
                     <i data-lucide="star" class="text-yellow-400" style="width:16px;height:16px"></i>
-                    <span class="sidebar-xp-text text-yellow-400 font-semibold text-sm" onclick="App.handleXpEasterEgg()" style="cursor:pointer" title="Hacé clic 10 veces rápido para desbloquear todo">${state.xp} XP</span>
+                    <span class="sidebar-xp-text text-yellow-400 font-semibold text-sm" onclick="App.handleXpEasterEgg()" style="cursor:pointer" title="Haz clic 10 veces rápido para desbloquear todo">${state.xp} XP</span>
                     ${nextXP ? `<span class="sidebar-xp-text text-slate-500 text-xs ml-auto">${state.xp}/${nextXP}</span>` : ''}
                 </div>
                 ${nextXP ? `
@@ -696,6 +707,9 @@ const App = (() => {
                             })()}
                         </div>
                     </div>
+                    <button onclick="App.toggleTheme()" class="theme-toggle-btn text-slate-500 hover:text-slate-300 p-1.5 rounded-lg inline-flex items-center justify-center" title="Cambiar tema">
+                        <i data-lucide="${document.documentElement.classList.contains('light') ? 'moon' : 'sun'}" style="width:18px;height:18px"></i>
+                    </button>
                     ${state.currentView !== 'dashboard' ? `
                         <button onclick="App.goToDashboard()" class="text-xs text-slate-500 hover:text-slate-300 transition-colors bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
                             <i data-lucide="bar-chart-3" style="width:14px;height:14px"></i> Dashboard
@@ -716,12 +730,12 @@ const App = (() => {
                 <!-- Hero -->
                 <div class="mb-8 animate-fade-in-up">
                     <h1 class="text-3xl font-bold text-slate-100 mb-2">
-                        ${stats.answered > 0 ? '<i data-lucide="hand" class="inline-block" style="width:32px;height:32px"></i> ¡Bienvenido de vuelta!' : '<i data-lucide="code-2" class="inline-block" style="width:32px;height:32px"></i> ¡Empezá a aprender Python!'}
+                        ${stats.answered > 0 ? '<i data-lucide="hand" class="inline-block" style="width:32px;height:32px"></i> ¡Bienvenido de vuelta!' : '<i data-lucide="code-2" class="inline-block" style="width:32px;height:32px"></i> ¡Empieza a aprender Python!'}
                     </h1>
                     <p class="text-slate-400">
                         ${stats.answered > 0
-                            ? `Tenés <span class="text-yellow-400 font-semibold">${stats.xp} XP</span> · ${stats.answered}/${stats.total} preguntas respondidas · ${stats.completedLevels}/${LEVELS.length} niveles completados`
-                            : 'Resolvé ejercicios interactivos y aprendé Python paso a paso'}
+                            ? `Tienes <span class="text-yellow-400 font-semibold">${stats.xp} XP</span> · ${stats.answered}/${stats.total} preguntas respondidas · ${stats.completedLevels}/${LEVELS.length} niveles completados`
+                            : 'Resuelve ejercicios interactivos y aprende Python paso a paso'}
                     </p>
                 </div>
 
@@ -793,7 +807,7 @@ const App = (() => {
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center gap-2">
                                             <h3 class="font-semibold text-slate-200 text-sm">${escapeHtml(level.title)}</h3>
-                                            <span class="text-xs px-2 py-0.5 rounded-full ${isComplete ? 'bg-emerald-900/40 text-emerald-300' : isUnlocked ? 'bg-blue-900/40 text-blue-300' : 'bg-slate-800 text-slate-500'}">${statusLabel}</span>
+                                            <span class="text-xs px-2 py-0.5 rounded-full ${isComplete ? 'bg-emerald-500/20 text-emerald-600' : isUnlocked ? 'bg-blue-500/20 text-blue-600' : 'bg-slate-800 text-slate-500'}">${statusLabel}</span>
                                         </div>
                                         <p class="text-xs text-slate-500 mt-0.5">${escapeHtml(level.subtitle)}</p>
                                         ${isUnlocked ? `
@@ -820,7 +834,7 @@ const App = (() => {
             <div class="max-w-4xl mx-auto py-6 px-4">
                 <div class="text-center mb-8">
                     <h1 class="text-2xl font-bold text-slate-100 mb-1"><i data-lucide="code-2" class="inline-block" style="width:28px;height:28px"></i> PyTrainer</h1>
-                    <p class="text-slate-400 text-sm">Seleccioná un nivel para practicar</p>
+                    <p class="text-slate-400 text-sm">Selecciona un nivel para practicar</p>
                     <p class="text-yellow-400 font-semibold text-sm mt-1"><i data-lucide="star" class="inline-block" style="width:16px;height:16px"></i> ${state.xp} XP totales</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -876,15 +890,15 @@ const App = (() => {
         let typeLabel, typeColor, typeDot;
         if (question.type === 'fill') {
             typeLabel = 'Completar código';
-            typeColor = 'text-blue-400 border-blue-700/30 bg-blue-900/20';
+            typeColor = 'text-blue-600 border-blue-500/30 bg-blue-500/20';
             typeDot = '<i data-lucide="text-cursor-input" style="width:14px;height:14px" class="inline-block align-middle"></i>';
         } else if (question.type === 'write') {
             typeLabel = 'Escribir código';
-            typeColor = 'text-violet-400 border-violet-700/30 bg-violet-900/20';
+            typeColor = 'text-violet-600 border-violet-500/30 bg-violet-500/20';
             typeDot = '<i data-lucide="pencil" style="width:14px;height:14px" class="inline-block align-middle"></i>';
         } else {
             typeLabel = 'Predecir salida';
-            typeColor = 'text-cyan-400 border-cyan-700/30 bg-cyan-900/20';
+            typeColor = 'text-cyan-600 border-cyan-500/30 bg-cyan-500/20';
             typeDot = '<i data-lucide="scan-eye" style="width:14px;height:14px" class="inline-block align-middle"></i>';
         }
         const hintAlreadyUsed = isHintUsed(question.id);
@@ -932,7 +946,7 @@ const App = (() => {
                     </label>
                     <input id="predict-input" type="text"
                         class="w-full bg-slate-800/60 border border-slate-600/30 rounded-xl px-4 py-3 text-slate-100 font-mono text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500/50 transition-all"
-                        placeholder="Escribí acá la salida que esperás..."
+                        placeholder="Escribe aquí la salida que esperas..."
                         autocomplete="off" spellcheck="false">
                 </div>
                 ` : ''}
@@ -962,7 +976,7 @@ const App = (() => {
 
                 <!-- Result Area -->
                 <div id="result-area" class="glass-card rounded-xl p-4 min-h-[56px] mb-3 shrink-0">
-                    <div class="text-slate-500 italic text-sm">Ejecutá tu código para ver el resultado acá.</div>
+                    <div class="text-slate-500 italic text-sm">Ejecuta tu código para ver el resultado aquí.</div>
                 </div>
 
                 <!-- Bottom Navigation -->
@@ -1007,7 +1021,7 @@ const App = (() => {
                 </div>`;
         } else {
             let extra = '';
-            if (result.error) extra += `<div class="bg-red-900/20 rounded-lg p-3 font-mono text-sm text-red-300 mt-2">${escapeHtml(result.error)}</div>`;
+            if (result.error) extra += `<div class="bg-red-500/20 rounded-lg p-3 font-mono text-sm text-red-400 mt-2">${escapeHtml(result.error)}</div>`;
             if (result.expected) {
                 extra += `<div class="text-xs text-slate-500 mt-1">Esperado: <span class="font-mono text-emerald-300">${escapeHtml(result.expected)}</span></div>`;
                 if (result.userAnswer !== undefined) {
@@ -1025,7 +1039,7 @@ const App = (() => {
                     </div>
                     ${result.output && !result.expected ? `<div class="bg-slate-900/50 rounded-lg p-3 font-mono text-sm text-slate-400 mt-1">Output: ${escapeHtml(result.output)}</div>` : ''}
                     ${extra}
-                    <p class="text-slate-500 text-xs mt-2"><i data-lucide="lightbulb" style="width:12px;height:12px" class="inline-block"></i> Revisá la lógica e intentá de nuevo</p>
+                    <p class="text-slate-500 text-xs mt-2"><i data-lucide="lightbulb" style="width:12px;height:12px" class="inline-block"></i> Revisa la lógica e intenta de nuevo</p>
                 </div>`;
         }
     }

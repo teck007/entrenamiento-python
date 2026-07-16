@@ -2,6 +2,80 @@
    PyTrainer — Estilos globales v3
    ============================================================ */
 
+/* ── Theme Tokens ─────────────────────────────────────────── */
+:root {
+  /* Slate palette (invertido para modo claro) */
+  --slate-50:  248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+
+  /* Emerald palette (valores originales Tailwind) */
+  --emerald-300: 110 231 183;
+  --emerald-400: 52 211 153;
+  --emerald-500: 16 185 129;
+  --emerald-600: 5 150 105;
+
+  /* Yellow palette (valores originales Tailwind) */
+  --yellow-400: 250 204 21;
+  --yellow-500: 234 179 8;
+  --yellow-600: 202 138 4;
+  --yellow-900: 113 63 18;
+
+  /* Non-slate tokens */
+  --bg-glass:       rgba(30, 41, 59, 0.6);
+  --bg-glass-card:  rgba(30, 41, 59, 0.4);
+  --bg-glass-border: rgba(148, 163, 184, 0.08);
+  --monaco-bg:      #020617;
+  --skeleton-from:  #0f172a;
+  --skeleton-mid:   #1e293b;
+  --skeleton-to:    #0f172a;
+  --toast-bg:       rgba(30, 41, 59, 0.95);
+}
+
+.light {
+  /* Slate palette invertido: los números altos = claros y viceversa */
+  --slate-950: 255 255 255;
+  --slate-900: 248 250 252;
+  --slate-800: 241 245 249;
+  --slate-700: 226 232 240;
+  --slate-600: 203 213 225;
+  --slate-500: 113 128 150;
+  --slate-400: 100 116 139;
+  --slate-300: 71 85 105;
+  --slate-200: 51 65 85;
+  --slate-100: 30 41 59;
+  --slate-50:  15 23 42;
+
+  /* Emerald palette (oscurecido para modo claro) */
+  --emerald-300: 5 150 105;
+  --emerald-400: 5 150 105;
+  --emerald-500: 4 120 87;
+  --emerald-600: 6 78 59;
+
+  /* Yellow palette (oscurecido para modo claro) */
+  --yellow-400: 180 115 0;
+  --yellow-500: 146 64 14;
+  --yellow-600: 133 77 14;
+  --yellow-900: 113 63 18;
+
+  --bg-glass:       rgba(255, 255, 255, 0.7);
+  --bg-glass-card:  rgba(255, 255, 255, 0.5);
+  --bg-glass-border: rgba(148, 163, 184, 0.15);
+  --monaco-bg:      #ffffff;
+  --skeleton-from:  #e2e8f0;
+  --skeleton-mid:   #f1f5f9;
+  --skeleton-to:    #e2e8f0;
+  --toast-bg:       rgba(255, 255, 255, 0.95);
+}
+
 /* ── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -11,11 +85,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: rgb(var(--slate-600));
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: rgb(var(--slate-500));
 }
 
 /* ── Sidebar ─────────────────────────────────────────────── */
@@ -24,7 +98,7 @@
   position: relative;
 }
 .sidebar-item:hover {
-  background: rgba(51, 65, 85, 0.5);
+  background: rgb(var(--slate-700) / 0.5);
 }
 .sidebar-item.active {
   background: rgba(59, 130, 246, 0.1);
@@ -49,7 +123,7 @@
 .sidebar-progress {
   height: 4px;
   border-radius: 2px;
-  background: rgba(71, 85, 105, 0.4);
+  background: rgb(var(--slate-700) / 0.4);
   overflow: hidden;
 }
 .sidebar-progress-fill {
@@ -60,14 +134,14 @@
 
 /* ── Glassmorphism ───────────────────────────────────────── */
 .glass-panel {
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--bg-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.08);
+  border: 1px solid var(--bg-glass-border);
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: var(--bg-glass-card);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(148, 163, 184, 0.06);
@@ -93,7 +167,7 @@
   width: 40px;
   height: 40px;
   stroke-width: 3;
-  stroke: #34d399;
+  stroke: rgb(var(--emerald-400));
   stroke-miterlimit: 10;
 }
 .checkmark circle {
@@ -129,7 +203,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(30, 41, 59, 0.95);
+  background: var(--toast-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(148, 163, 184, 0.1);
@@ -139,10 +213,10 @@
 .toast.removing {
   animation: toastOut 0.3s ease-in forwards;
 }
-.toast-success { border-left: 3px solid #10b981; }
+.toast-success { border-left: 3px solid rgb(var(--emerald-500)); }
 .toast-error { border-left: 3px solid #ef4444; }
 .toast-info { border-left: 3px solid #3b82f6; }
-.toast-xp { border-left: 3px solid #facc15; }
+.toast-xp { border-left: 3px solid rgb(var(--yellow-400)); }
 
 /* ── XP Popup legacy ─────────────────────────────────────── */
 .xp-popup {
@@ -181,7 +255,7 @@
 /* ── Monaco overrides ────────────────────────────────────── */
 .monaco-editor .margin,
 .monaco-editor .monaco-editor-background {
-  background-color: #020617 !important;
+  background-color: var(--monaco-bg) !important;
 }
 
 /* ── Hint toggle ─────────────────────────────────────────── */
@@ -214,13 +288,22 @@
 
 /* ── Monaco skeleton loader ──────────────────────────────── */
 .monaco-skeleton {
-  background: linear-gradient(90deg, #0f172a 25%, #1e293b 50%, #0f172a 75%);
+  background: linear-gradient(90deg, var(--skeleton-from) 25%, var(--skeleton-mid) 50%, var(--skeleton-to) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* ── Theme toggle ────────────────────────────────────────── */
+.theme-toggle-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.theme-toggle-btn:hover {
+  background: rgb(var(--slate-700) / 0.3);
 }
 
 /* ── Responsive sidebar ──────────────────────────────────── */

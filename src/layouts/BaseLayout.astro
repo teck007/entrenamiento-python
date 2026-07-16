@@ -7,7 +7,7 @@ export interface Props {
   description?: string;
 }
 
-const { title = 'PyTrainer — Aprendé Python', description = 'Aprendé Python paso a paso resolviendo ejercicios interactivos' } = Astro.props;
+const { title = 'PyTrainer — Aprende Python', description = 'Aprende Python paso a paso resolviendo ejercicios interactivos' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -17,6 +17,20 @@ const { title = 'PyTrainer — Aprendé Python', description = 'Aprendé Python 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <!-- Theme init (before paint, evita FOUC) -->
+    <script is:inline>
+      (function() {
+        try {
+          var theme = localStorage.getItem('pytrainer_theme');
+          if (theme === 'light') {
+            document.documentElement.classList.add('light');
+          } else if (!theme && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.classList.add('light');
+          }
+        } catch(e) {}
+      })();
+    </script>
 
     <!-- Skulpt: Python en el navegador (CDN estable: jsDelivr) -->
     <script

@@ -1,9 +1,37 @@
 /** @type {import('tailwindcss').Config} */
 
 export default {
+  darkMode: 'class',
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}', './public/scripts/*.js'],
   theme: {
     extend: {
+      colors: {
+        slate: {
+          50: 'rgb(var(--slate-50) / <alpha-value>)',
+          100: 'rgb(var(--slate-100) / <alpha-value>)',
+          200: 'rgb(var(--slate-200) / <alpha-value>)',
+          300: 'rgb(var(--slate-300) / <alpha-value>)',
+          400: 'rgb(var(--slate-400) / <alpha-value>)',
+          500: 'rgb(var(--slate-500) / <alpha-value>)',
+          600: 'rgb(var(--slate-600) / <alpha-value>)',
+          700: 'rgb(var(--slate-700) / <alpha-value>)',
+          800: 'rgb(var(--slate-800) / <alpha-value>)',
+          900: 'rgb(var(--slate-900) / <alpha-value>)',
+          950: 'rgb(var(--slate-950) / <alpha-value>)',
+        },
+        emerald: {
+          300: 'rgb(var(--emerald-300) / <alpha-value>)',
+          400: 'rgb(var(--emerald-400) / <alpha-value>)',
+          500: 'rgb(var(--emerald-500) / <alpha-value>)',
+          600: 'rgb(var(--emerald-600) / <alpha-value>)',
+        },
+        yellow: {
+          400: 'rgb(var(--yellow-400) / <alpha-value>)',
+          500: 'rgb(var(--yellow-500) / <alpha-value>)',
+          600: 'rgb(var(--yellow-600) / <alpha-value>)',
+          900: 'rgb(var(--yellow-900) / <alpha-value>)',
+        },
+      },
       fontFamily: {
         mono: ['"SF Mono"', '"Fira Code"', '"Cascadia Code"', '"JetBrains Mono"', 'Consolas', 'monospace'],
       },
