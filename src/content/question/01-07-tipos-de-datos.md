@@ -4,7 +4,7 @@ level: 1
 type: fill
 title: "Tipos de datos"
 xp: 10
-hint: "type() devuelve el tipo según el literal que le pases. Probá con un número que tenga punto decimal."
+hint: "type() devuelve el tipo según el literal que le pases. Prueba con un número que tenga punto decimal."
 tests:
   - expectedOutput: "<class 'float'>"
 ---

@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "P\ny\nt\nh\no\nn"
 ---
 
-Completá la palabra para que el bucle imprima cada letra en una línea.
+Completa la palabra para que el bucle imprima cada letra en una línea.
 
 ```python
 palabra = "___"

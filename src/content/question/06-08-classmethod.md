@@ -10,7 +10,7 @@ tests:
     expectedOutput: "78.5"
 ---
 
-Creá una clase `Circulo` con un método de clase `desde_diametro` que cree un círculo a partir del diámetro y calcule el área (3.14 * radio**2).
+Crea una clase `Circulo` con un método de clase `desde_diametro` que cree un círculo a partir del diámetro y calcule el área (3.14 * radio**2).
 
 ```python
 class Circulo:
@@ -22,5 +22,5 @@ class Circulo:
     
     @classmethod
     def desde_diametro(cls, diametro):
-        # Escribí tu código acá
+        # Escribe tu código aquí
 ```

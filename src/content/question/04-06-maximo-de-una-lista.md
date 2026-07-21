@@ -4,7 +4,7 @@ level: 4
 type: write
 title: "Máximo de una lista"
 xp: 20
-hint: "Inicializá una variable con el primer elemento y compará con un for."
+hint: "Inicializa una variable con el primer elemento y compara con un for."
 tests:
   - call: "maximo([3, 7, 2, 9, 1])"
     expectedOutput: "9"

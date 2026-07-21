@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "True"
 ---
 
-Analizá el siguiente programa y decidí qué imprime.
+Analiza el siguiente programa y decide qué imprime.
 
 ```python
 def es_positivo(x):

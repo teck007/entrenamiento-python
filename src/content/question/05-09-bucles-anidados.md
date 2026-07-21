@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "6"
 ---
 
-Analizá el siguiente programa y decidí qué imprime en la consola.
+Analiza el siguiente programa y decide qué imprime en la consola.
 
 ```python
 resultado = 0

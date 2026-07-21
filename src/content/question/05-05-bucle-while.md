@@ -4,12 +4,12 @@ level: 5
 type: predict
 title: "Bucle while"
 xp: 20
-hint: "El bucle suma números mientras el contador sea menor o igual a 5. Seguí cada iteración."
+hint: "El bucle suma números mientras el contador sea menor o igual a 5. Sigue cada iteración."
 tests:
   - expectedOutput: "15"
 ---
 
-Analizá el siguiente programa y decidí qué imprime en la consola.
+Analiza el siguiente programa y decide qué imprime en la consola.
 
 ```python
 total = 0

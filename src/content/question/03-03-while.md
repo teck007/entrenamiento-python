@@ -4,7 +4,7 @@ level: 3
 type: fill
 title: While
 xp: 10
-hint: "El bucle debe repetirse mientras el contador no supere cierto valor. Pensá en una comparación adecuada."
+hint: "El bucle debe repetirse mientras el contador no supere cierto valor. Piensa en una comparación adecuada."
 tests:
   - expectedOutput: "1\n2\n3\n4\n5"
 ---

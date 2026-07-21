@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "Hola Mundo"
 ---
 
-Completá el código para que muestre "Hola Mundo" usando la variable `nombre`.
+Completa el código para que muestre "Hola Mundo" usando la variable `nombre`.
 
 ```python
 nombre = "Mundo"

@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "impar"
 ---
 
-Analizá el siguiente programa y decidí qué imprime en la consola.
+Analiza el siguiente programa y decide qué imprime en la consola.
 
 ```python
 def es_par(numero):

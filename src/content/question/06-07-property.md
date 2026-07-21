@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "30"
 ---
 
-Completá el decorador para que `r.area` funcione como un atributo.
+Completa el decorador para que `r.area` funcione como un atributo.
 
 ```python
 class Rectangulo:

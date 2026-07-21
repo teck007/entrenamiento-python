@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "20"
 ---
 
-Analizá el siguiente programa y decidí qué imprime.
+Analiza el siguiente programa y decide qué imprime.
 
 ```python
 numeros = [x * 2 for x in range(1, 6)]

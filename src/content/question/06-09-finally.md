@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "Error: división por cero\nBloque finally ejecutado"
 ---
 
-Completá el bloque faltante.
+Completa el bloque faltante.
 
 ```python
 try:
