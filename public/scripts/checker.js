@@ -47,7 +47,7 @@ const Checker = (() => {
     async function runCode(code) {
         await readyPromise;
         if (!ready) {
-            return { success: false, output: '', error: 'Skulpt no está disponible. Recargá la página.' };
+            return { success: false, output: '', error: 'Skulpt no está disponible. Recarga la página.' };
         }
 
         let outputBuffer = '';
@@ -112,7 +112,7 @@ const Checker = (() => {
             error: null,
             details: passed
                 ? '¡Correcto! Adivinaste la salida exacta.'
-                : 'No es la salida correcta. Analizá el código paso a paso.'
+                : 'No es la salida correcta. Analiza el código paso a paso.'
         };
     }
 

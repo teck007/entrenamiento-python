@@ -1,0 +1,24 @@
+---
+id: 50
+level: 7
+type: predict
+title: "Integración total"
+xp: 20
+hint: "La función recibe una lista, suma solo los números pares y devuelve el resultado. Identifica los pares en [1, 2, 3, 4, 5, 6]."
+tests:
+  - expectedOutput: "12"
+---
+
+Analiza el siguiente programa y decide qué imprime en la consola.
+
+```python
+def procesar(lista):
+    suma = 0
+    for n in lista:
+        if n % 2 == 0:
+            suma = suma + n
+    return suma
+
+numeros = [1, 2, 3, 4, 5, 6]
+print(procesar(numeros))
+```

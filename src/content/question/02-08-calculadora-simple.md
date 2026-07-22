@@ -4,7 +4,7 @@ level: 2
 type: write
 title: "Calculadora simple"
 xp: 20
-hint: "Usá if/elif para cada operador (+, -, *, /) y print para mostrar el resultado."
+hint: "Usa if/elif para cada operador (+, -, *, /) y print para mostrar el resultado."
 tests:
   - expectedOutput: "13"
 ---

@@ -4,7 +4,7 @@ level: 4
 type: write
 title: "Función que filtra"
 xp: 20
-hint: "Usá un for con if para filtrar, o una list comprehension."
+hint: "Usa un for con if para filtrar, o una list comprehension."
 tests:
   - call: "pares([1, 2, 3, 4, 5, 6])"
     expectedOutput: "[2, 4, 6]"

@@ -9,7 +9,7 @@ tests:
   - expectedOutput: "0\n2\n4\n6\n8"
 ---
 
-Completá range() para que genere solo los números pares del 0 al 8.
+Completa range() para que genere solo los números pares del 0 al 8.
 
 ```python
 for i in range(___, ___, ___):
