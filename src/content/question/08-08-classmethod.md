@@ -1,6 +1,6 @@
 ---
 id: 63
-level: 6
+level: 8
 type: write
 title: "@classmethod"
 xp: 20

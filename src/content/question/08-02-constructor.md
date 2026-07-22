@@ -1,6 +1,6 @@
 ---
 id: 57
-level: 6
+level: 8
 type: write
 title: Constructor
 xp: 20

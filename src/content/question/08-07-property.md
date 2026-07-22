@@ -1,6 +1,6 @@
 ---
 id: 62
-level: 6
+level: 8
 type: fill
 title: "@property"
 xp: 10

@@ -1,6 +1,6 @@
 ---
 id: 65
-level: 6
+level: 8
 type: write
 title: "super()"
 xp: 20
