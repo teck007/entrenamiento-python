@@ -1,6 +1,6 @@
 ---
 id: 38
-level: 4
+level: 5
 type: write
 title: "Contar ocurrencias"
 xp: 20

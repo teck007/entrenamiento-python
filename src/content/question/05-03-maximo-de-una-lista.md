@@ -1,6 +1,6 @@
 ---
 id: 36
-level: 4
+level: 5
 type: write
 title: "Máximo de una lista"
 xp: 20
