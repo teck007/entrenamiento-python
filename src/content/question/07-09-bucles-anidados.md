@@ -1,6 +1,6 @@
 ---
 id: 49
-level: 5
+level: 7
 type: predict
 title: "Bucles anidados"
 xp: 20

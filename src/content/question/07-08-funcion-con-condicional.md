@@ -1,6 +1,6 @@
 ---
 id: 48
-level: 5
+level: 7
 type: predict
 title: "Función con condicional"
 xp: 20

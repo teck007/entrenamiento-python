@@ -1,6 +1,6 @@
 ---
 id: 50
-level: 5
+level: 7
 type: predict
 title: "Integración total"
 xp: 20
